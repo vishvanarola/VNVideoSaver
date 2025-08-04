@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SplashView: View {
     @State private var isActive = false
+    @State private var delayTime = 0.7
     
     var body: some View {
         if isActive {
@@ -32,7 +33,8 @@ struct SplashView: View {
             }
             .padding()
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.7, execute: {
+                delayTime = PremiumManager.shared.isPremium ? 0.7 : 1.5
+                DispatchQueue.main.asyncAfter(deadline: .now()+delayTime, execute: {
                     isActive = true
                 })
             }

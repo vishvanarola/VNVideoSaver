@@ -17,34 +17,34 @@ struct VNVideoSaverApp: App {
     init() {
         ReachabilityManager.shared.startMonitoring()
         
-//        FirebaseApp.configure()
+        FirebaseApp.configure()
         
         PremiumManager.shared.configureRevenueCat()
         
-//        AdServices().fetchNewRemoteAdsData { response in
-//            AdManager.shared.configureAds(response.canShowUMP ?? false)
-//            interstitialIntergap = response.intergap ?? 3
-//            remoteConfigAdShowCount = response.intergap ?? 3
-//            restoreShow = response.restoreShow ?? false
-//            if let appOpenAdUnitID = response.appOpen {
-//                AdManager.shared.appOpenAdUnitID = appOpenAdUnitID
-//                if !PremiumManager.shared.isPremium {
-//                    AdManager.shared.loadAppOpenAd(true)
-//                }
-//            }
-//            
-//            if let bannerAdUnitID = response.banner {
-//                AdManager.shared.bannerAdUnitID = bannerAdUnitID
-//            }
-//            
-//            if let interstitialAdUnitID = response.interstitial {
-//                AdManager.shared.interstitialAdUnitID = interstitialAdUnitID
-//                AdManager.shared.loadInterstitialAd()
-//            }
-//            
-//        } failure: { error in
-//            print("error remote config fetch: \(error)")
-//        }
+        AdServices().fetchNewRemoteAdsData { response in
+            AdManager.shared.configureAds(response.canShowUMP ?? false)
+            interstitialIntergap = response.intergap ?? 3
+            remoteConfigAdShowCount = response.intergap ?? 3
+            restoreShow = response.restoreShow ?? false
+            if let appOpenAdUnitID = response.appOpen {
+                AdManager.shared.appOpenAdUnitID = appOpenAdUnitID
+                if !PremiumManager.shared.isPremium {
+                    AdManager.shared.loadAppOpenAd(true)
+                }
+            }
+            
+            if let bannerAdUnitID = response.banner {
+                AdManager.shared.bannerAdUnitID = bannerAdUnitID
+            }
+            
+            if let interstitialAdUnitID = response.interstitial {
+                AdManager.shared.interstitialAdUnitID = interstitialAdUnitID
+                AdManager.shared.loadInterstitialAd()
+            }
+            
+        } failure: { error in
+            print("error remote config fetch: \(error)")
+        }
     }
     
     var sharedModelContainer: ModelContainer = {

@@ -44,7 +44,7 @@ struct TabBarView: View {
                             .cornerRadius(30)
                             .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 1)
                     )
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 10)
                     .padding(.horizontal)
                 }
                 if !isHiddenBanner && !PremiumManager.shared.isPremium && adManager.isBannerAdLoaded {

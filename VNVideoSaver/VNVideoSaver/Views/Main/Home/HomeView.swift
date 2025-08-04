@@ -47,6 +47,10 @@ struct HomeView: View {
                     headerView
                     textFieldView
                     findButton
+                    if !randomVideos.isEmpty {
+                        videoListView
+                        Spacer()
+                    }
                     tools
                     Spacer()
                 }
@@ -169,6 +173,7 @@ struct HomeView: View {
                     .padding(.trailing, 70)
             }
         }
+        .padding(.horizontal, 20)
     }
     
     var findButton: some View {
@@ -210,6 +215,44 @@ struct HomeView: View {
         )
         .cornerRadius(30)
         .padding(.top)
+        .padding(.horizontal, 20)
+    }
+    
+    var videoListView: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    Color.clear
+                        .frame(height: 1)
+                        .background(
+                            GeometryReader { geo -> Color in
+                                DispatchQueue.main.async {
+                                    isUserAtTop = geo.frame(in: .named("scroll")).minY >= -10
+                                }
+                                return Color.clear
+                            }
+                        )
+                        .id("top")
+                    
+                    ForEach(randomVideos) { item in
+                        VideoThumbnailView(videoData: item.data)
+                            .padding(.horizontal)
+                    }
+                }
+                .padding(.top)
+                .padding(.bottom, 5)
+            }
+            .coordinateSpace(name: "scroll")
+            .onChange(of: randomVideos) { _, _ in
+                if !isUserAtTop {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo("top", anchor: .top)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     var tools: some View {
@@ -249,6 +292,72 @@ struct HomeView: View {
     func isValidURLRegex(_ urlString: String) -> Bool {
         let pattern = #"^(http|https)://([\w-]+(\.[\w-]+)+)([/#?]?.*)$"#
         return urlString.range(of: pattern, options: .regularExpression) != nil
+    }
+}
+
+struct VideoThumbnailView: View {
+    @State var videoData: VideosArrayData?
+    @State private var isPresentingPlayer = false
+    @State private var showNoInternetAlert: Bool = false
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(.black.opacity(0.1))
+                AsyncImage(url: URL(string: videoData?.videoThumb ?? "")) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                    case .failure:
+                        Image(systemName: "photo")
+                            .resizable()
+                            .scaledToFit()
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+                .frame(width: 60, height: 60)
+                .cornerRadius(10)
+            }
+            .frame(width: 60, height: 60)
+            
+            VStack(alignment: .leading, spacing: 5) {
+                Text(videoData?.title ?? "Video Name")
+                    .font(FontConstants.MontserratFonts.semiBold(size: 15))
+                    .lineLimit(2)
+                    .foregroundStyle(Color.primary)
+                Text(videoData?.size ?? "--")
+                    .font(FontConstants.MontserratFonts.medium(size: 14))
+                    .foregroundStyle(textGrayColor)
+                    .lineLimit(1)
+            }
+            Spacer()
+        }
+        .padding(10)
+        .background(textGrayColor.opacity(0.2))
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.25), radius: 2, x: 0, y: 0)
+        .onTapGesture {
+            if ReachabilityManager.shared.isNetworkAvailable {
+                isPresentingPlayer = true
+            } else {
+                showNoInternetAlert = true
+            }
+        }
+        .sheet(isPresented: $isPresentingPlayer) {
+            if let urlString = videoData?.videoUrl, let url = URL(string: urlString) {
+                VideoPlayerView(videoURL: url)
+            } else {
+                Text("Invalid video URL")
+            }
+        }
+        .noInternetAlert(isPresented: $showNoInternetAlert)
     }
 }
 
