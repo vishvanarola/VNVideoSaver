@@ -67,7 +67,7 @@ struct CompressVideoView: View {
     var headerView: some View {
         HeaderView(
             leftButtonImageName: "ic_back",
-            rightButtonImageName: isVideoPicked ? "ic_share" : "ic_plus",
+            rightButtonImageName: isVideoPicked ? "ic_share" : "ic_white_plus",
             headerTitle: "Compress",
             leftButtonAction: {
                 isTabBarHidden = false
@@ -132,8 +132,12 @@ struct CompressVideoView: View {
         ThemeButtonView(buttonTitle: "Compress") {
             if let url = pickedVideoURL {
                 if ReachabilityManager.shared.isNetworkAvailable {
-                    AdManager.shared.showInterstitialAd()
-                    compressVideo(originalURL: url)
+                    if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
+                        AdManager.shared.showInterstitialAd()
+                        compressVideo(originalURL: url)
+                    } else {
+                        navigationPath.append(HomeDestination.premium)
+                    }
                 } else {
                     showNoInternetAlert = true
                 }
@@ -178,9 +182,9 @@ struct CompressVideoView: View {
                             if let player = self.player {
                                 self.configurePlayer(player)
                             }
+                            PremiumManager.shared.markUsed()
                             toastText = "Video compressed successfully"
                             self.showToast = true
-                            PremiumManager.shared.markUsed()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                                 self.showToast = false
                             }

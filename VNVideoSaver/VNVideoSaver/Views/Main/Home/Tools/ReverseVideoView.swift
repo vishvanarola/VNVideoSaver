@@ -67,7 +67,7 @@ struct ReverseVideoView: View {
     var headerView: some View {
         HeaderView(
             leftButtonImageName: "ic_back",
-            rightButtonImageName: isVideoPicked ? "ic_share" : "ic_plus",
+            rightButtonImageName: isVideoPicked ? "ic_share" : "ic_white_plus",
             headerTitle: "Reverse",
             leftButtonAction: {
                 isTabBarHidden = false
@@ -132,8 +132,12 @@ struct ReverseVideoView: View {
         ThemeButtonView(buttonTitle: "Reverse Now") {
             if let url = pickedVideoURL {
                 if ReachabilityManager.shared.isNetworkAvailable {
-                    AdManager.shared.showInterstitialAd()
-                    reverseVideo(originalURL: url)
+                    if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
+                        AdManager.shared.showInterstitialAd()
+                        reverseVideo(originalURL: url)
+                    } else {
+                        navigationPath.append(HomeDestination.premium)
+                    }
                 } else {
                     showNoInternetAlert = true
                 }
@@ -149,109 +153,7 @@ struct ReverseVideoView: View {
     }
     
     func reverseVideo(originalURL: URL) {
-        let asset = AVURLAsset(url: originalURL)
-        
-        Task {
-            let outputURL = FileManager.default.temporaryDirectory
-                .appendingPathComponent("reversedVideo_\(UUID().uuidString).mov")
-            
-            try? FileManager.default.removeItem(at: outputURL)
-            
-            guard let videoTrack = try? await asset.loadTracks(withMediaType: .video).first else {
-                print("No video track found.")
-                return
-            }
-            
-            let readerSettings: [String: Any] = [
-                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
-            ]
-            
-            guard let reader = try? AVAssetReader(asset: asset) else {
-                print("Failed to setup reader.")
-                return
-            }
-            
-            let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerSettings)
-            
-            
-            readerOutput.alwaysCopiesSampleData = false
-            reader.add(readerOutput)
-            
-            var samples: [CMSampleBuffer] = []
-            
-            reader.startReading()
-            
-            while let sample = readerOutput.copyNextSampleBuffer() {
-                samples.append(sample)
-            }
-            
-            reader.cancelReading()
-            
-            samples.reverse()
-            
-            guard let writer = try? AVAssetWriter(outputURL: outputURL, fileType: .mov) else {
-                print("Failed to create writer.")
-                return
-            }
-            
-            let videoSettings: [String: Any] = [
-                AVVideoCodecKey: AVVideoCodecType.h264,
-                AVVideoWidthKey: videoTrack.naturalSize.width,
-                AVVideoHeightKey: videoTrack.naturalSize.height
-            ]
-            
-            let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
-            writerInput.expectsMediaDataInRealTime = false
-            
-            let adaptor = AVAssetWriterInputPixelBufferAdaptor(
-                assetWriterInput: writerInput,
-                sourcePixelBufferAttributes: [
-                    kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-                    kCVPixelBufferWidthKey as String: videoTrack.naturalSize.width,
-                    kCVPixelBufferHeightKey as String: videoTrack.naturalSize.height
-                ]
-            )
-            
-            writer.add(writerInput)
-            
-            writer.startWriting()
-            writer.startSession(atSourceTime: .zero)
-            
-            let mediaInputQueue = DispatchQueue(label: "mediaInputQueue")
-            
-            var frameTime = CMTime.zero
-            let frameDuration = CMTimeMake(value: 1, timescale: Int32(videoTrack.nominalFrameRate))
-            
-            writerInput.requestMediaDataWhenReady(on: mediaInputQueue) {
-                for sample in samples {
-                    guard writerInput.isReadyForMoreMediaData,
-                          let imageBuffer = CMSampleBufferGetImageBuffer(sample) else { continue }
-                    
-                    adaptor.append(imageBuffer, withPresentationTime: frameTime)
-                    frameTime = CMTimeAdd(frameTime, frameDuration)
-                }
-                
-                writerInput.markAsFinished()
-                writer.finishWriting {
-                    DispatchQueue.main.async {
-                        if writer.status == .completed {
-                            self.convertedVideoURL = outputURL
-                            self.isPlaying = false
-                            if let player = self.player {
-                                self.configurePlayer(player)
-                            }
-                            self.toastText = "Video reversed successfully!"
-                            self.showToast = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                                self.showToast = false
-                            }
-                        } else {
-                            print("Reverse failed: \(writer.error?.localizedDescription ?? "Unknown error")")
-                        }
-                    }
-                }
-            }
-        }
+        PremiumManager.shared.markUsed()
     }
     
     func shareVideo(url: URL) {

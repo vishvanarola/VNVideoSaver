@@ -113,10 +113,15 @@ struct GetHashtagView: View {
                 Spacer()
                 HStack(spacing: 10) {
                     Button {
-                        UIPasteboard.general.string = hashtag.description
-                        showToast = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                            self.showToast = false
+                        if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
+                            PremiumManager.shared.markUsed()
+                            UIPasteboard.general.string = hashtag.description
+                            showToast = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                self.showToast = false
+                            }
+                        } else {
+                            navigationPath.append(HomeDestination.premium)
                         }
                     } label: {
                         Image("ic_white_copy")

@@ -31,7 +31,7 @@ class PremiumManager: ObservableObject {
     private init() {}
     
     func configureRevenueCat() {
-        Purchases.configure(withAPIKey: "appl_jRHlDNzsihlmwrJknwABegaBXoP")
+        Purchases.configure(withAPIKey: "appl_BSZcOjFQKiqAqpHanGFncaLYnWl")
         checkPremiumStatus()
     }
     

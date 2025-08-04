@@ -50,7 +50,7 @@ struct HomeView: View {
                     tools
                     Spacer()
                 }
-                .padding(.horizontal, 20)
+                .ignoresSafeArea()
                 if showToast {
                     VStack {
                         Spacer()
@@ -80,19 +80,32 @@ struct HomeView: View {
                     GetHashtagView(isTabBarHidden: $isTabBarHidden, navigationPath: $navigationPath)
                         .navigationBarBackButtonHidden(true)
                 case .premium:
-                    PremiumView()
+                    PremiumView(isTabBarHidden: $isTabBarHidden, navigationPath: $navigationPath, isHiddenBanner: $isHiddenBanner)
+                        .navigationBarBackButtonHidden(true)
                 }
             }
         }
     }
     
     var headerView: some View {
-        HStack {
-            Text(homeAppName)
-                .font(FontConstants.SyneFonts.semiBold(size: 23))
-                .foregroundStyle(Color.white)
+        VStack {
             Spacer()
-            if !PremiumManager.shared.isPremium {
+            HStack {
+                Text(homeAppName)
+                    .font(FontConstants.SyneFonts.semiBold(size: 23))
+                    .foregroundStyle(Color.white)
+                    .overlay(
+                        LinearGradient(
+                            colors: [redThemeColor, pinkGradientColor],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .mask(
+                        Text(homeAppName)
+                            .font(FontConstants.SyneFonts.semiBold(size: 23))
+                    )
+                Spacer()
                 Button {
                     if ReachabilityManager.shared.isNetworkAvailable {
                         isHideTabBackPremium = false
@@ -103,13 +116,15 @@ struct HomeView: View {
                     }
                 } label: {
                     Image("ic_pro")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(width: 70, height: 30)
                 }
-            } else {
-                Spacer()
-                Spacer()
             }
+            .padding(.bottom, 20)
         }
-        .padding(.bottom, 20)
+        .frame(height: UIScreen.main.bounds.height * 0.15)
+        .padding(.horizontal, 20)
     }
     
     var textFieldView: some View {
@@ -200,71 +215,26 @@ struct HomeView: View {
     var tools: some View {
         VStack(spacing: 16) {
             HStack(spacing: 16) {
-                Image("ic_compress_video")
-                    .resizable()
-                    .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
-                    .onTapGesture {
-                        isTabBarHidden = true
-                        navigationPath.append(HomeDestination.compress)
-                    }
-                Image("ic_reverse_video")
-                    .resizable()
-                    .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
-                    .onTapGesture {
-                        isTabBarHidden = true
-                        navigationPath.append(HomeDestination.reverse)
-                    }
+                tool(image: "ic_compress_video", destination: .compress)
+                tool(image: "ic_reverse_video", destination: .reverse)
             }
             HStack(spacing: 16) {
-                Image("ic_slowmotion_video")
-                    .resizable()
-                    .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
-                    .onTapGesture {
-                        isTabBarHidden = true
-                        navigationPath.append(HomeDestination.slowmotion)
-                    }
-                Image("ic_get_hashtag")
-                    .resizable()
-                    .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
-                    .onTapGesture {
-                        isTabBarHidden = true
-                        navigationPath.append(HomeDestination.hashtag)
-                    }
+                tool(image: "ic_slowmotion_video", destination: .slowmotion)
+                tool(image: "ic_get_hashtag", destination: .hashtag)
             }
         }
         .padding(.top, 20)
     }
     
-    func tool(image: String, text: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                Image(image)
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                Spacer()
-                Image("ic_tools")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-            }
-            Text(text)
-                .font(FontConstants.MontserratFonts.regular(size: 14))
-                .foregroundColor(.white)
+    func tool(image: String, destination: HomeDestination) -> some View {
+        Button {
+            isTabBarHidden = true
+            navigationPath.append(destination)
+        } label: {
+            Image(image)
+                .resizable()
+                .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
         }
-        .padding()
-        .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
-        .background(textGrayColor.opacity(0.2))
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.white, .clear]),
-                        startPoint: .init(x: 0.5, y: -10),
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 3
-                )
-        )
-        .cornerRadius(30)
     }
     
     func showToasts() {

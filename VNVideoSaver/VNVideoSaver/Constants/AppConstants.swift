@@ -13,7 +13,7 @@ let remoteConfigAdFetchKey = "VideoTools"
 var interstitialIntergap: Int = 3
 var isHideTabBackPremium: Bool = true
 var remoteConfigAdShowCount: Int = 3
-var restoreShow: Bool = false
+var restoreShow: Bool = true
 
 let redThemeColor = Color(red: 229/255, green: 32/255, blue: 32/255) //#E52020
 let pinkThemeColor = Color(red: 1.0, green: 101/255, blue: 101/255) //#FF6565
@@ -22,11 +22,11 @@ let pinkOpacityColor = Color(red: 242/255, green: 84/255, blue: 91/255) //#F2545
 let pinkGradientColor = Color(red: 1.0, green: 65/255, blue: 101/255) //#FF4165
 let backgroundGrayColor = Color(red: 217/255, green: 217/255, blue: 217/255) //#D9D9D9
 
-let appLink = URL(string: "")
-let appRateLink = URL(string: "")
-let termsCondition = URL(string: "")
-let EULA = URL(string: "")
-let privacyPolicy = URL(string: "")
+let appLink = URL(string: "https://apps.apple.com/us/app/video-saver-2025/id6749473138")
+let appRateLink = URL(string: "https://apps.apple.com/us/app/video-downloader-form-insta/id6749473138?action=write-review")
+let termsCondition = URL(string: "https://sahilnarola22.blogspot.com/2025/08/terms-condition.html")
+let EULA = URL(string: "https://sahilnarola22.blogspot.com/2025/08/eula.html")
+let privacyPolicy = URL(string: "https://sahilnarola22.blogspot.com/2025/08/privacy-policy_1.html")
 
 var videosArray: [VideosArrayData] = [
     VideosArrayData(title: "Big Buck Bunny", videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", videoThumb: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", size: "428 KB"),

@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum CustomTab {
-    case home, myFiles, lock
+    case home, myCollection, settings
 }
 
 struct TabBarView: View {
@@ -23,10 +23,10 @@ struct TabBarView: View {
                 switch selectedTab {
                 case .home:
                     HomeView(isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
-                case .myFiles:
-                    EmptyView()
-                case .lock:
-                    EmptyView()
+                case .myCollection:
+                    MyCollectionsView(selectedTab: $selectedTab, isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
+                case .settings:
+                    SettingsView(selectedTab: $selectedTab, isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
                 }
             }
             VStack(spacing: 0) {
@@ -34,9 +34,9 @@ struct TabBarView: View {
                     HStack {
                         tabBarItem(tab: .home, icon: "ic_selected_home", deselectIcon: "ic_deselected_home", label: "Home")
                         Spacer()
-                        tabBarItem(tab: .myFiles, icon: "ic_selected_collection", deselectIcon: "ic_deselected_collection", label: "My Files")
+                        tabBarItem(tab: .myCollection, icon: "ic_selected_collection", deselectIcon: "ic_deselected_collection", label: "My Files")
                         Spacer()
-                        tabBarItem(tab: .lock, icon: "ic_selected_settings", deselectIcon: "ic_deselected_settings", label: "Lock")
+                        tabBarItem(tab: .settings, icon: "ic_selected_settings", deselectIcon: "ic_deselected_settings", label: "Lock")
                     }
                     .padding(.horizontal)
                     .background(

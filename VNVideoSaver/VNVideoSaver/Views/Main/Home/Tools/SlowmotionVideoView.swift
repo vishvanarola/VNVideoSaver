@@ -77,7 +77,7 @@ struct SlowmotionVideoView: View {
     var headerView: some View {
         HeaderView(
             leftButtonImageName: "ic_back",
-            rightButtonImageName: "ic_plus",
+            rightButtonImageName: "ic_white_plus",
             headerTitle: "Slowmotion",
             leftButtonAction: {
                 isTabBarHidden = false
@@ -152,9 +152,14 @@ struct SlowmotionVideoView: View {
     
     func slowButton(text: String, type: SlowmotionType) -> some View {
         Button {
-            slowmotionType = type
-            if let url = self.pickedVideoURL {
-                self.slowmotionVideo(originalURL: url, type: type)
+            if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
+                PremiumManager.shared.markUsed()
+                slowmotionType = type
+                if let url = self.pickedVideoURL {
+                    self.slowmotionVideo(originalURL: url, type: type)
+                }
+            } else {
+                navigationPath.append(HomeDestination.premium)
             }
         } label: {
             Text(text)

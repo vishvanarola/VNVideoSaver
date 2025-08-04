@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1801BABA2E35FFC500A42DAA /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BAB92E35FFC500A42DAA /* FirebaseCrashlytics */; };
-		1801BABC2E35FFC500A42DAA /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BABB2E35FFC500A42DAA /* FirebaseRemoteConfig */; };
 		1801BABF2E3600FB00A42DAA /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BABE2E3600FB00A42DAA /* RevenueCat */; };
 		1801BAC22E36016B00A42DAA /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BAC12E36016B00A42DAA /* Reachability */; };
 		1801BAC52E3601E200A42DAA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BAC42E3601E200A42DAA /* GoogleMobileAds */; };
 		1801BAC82E36022200A42DAA /* SwiftyAds in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BAC72E36022200A42DAA /* SwiftyAds */; };
 		1801BBA82E362D6000A42DAA /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 1801BBA72E362D6000A42DAA /* Lottie */; };
+		181A548B2E3B753A00E938F3 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 181A548A2E3B753A00E938F3 /* FirebaseCrashlytics */; };
+		181A548D2E3B753A00E938F3 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 181A548C2E3B753A00E938F3 /* FirebaseRemoteConfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,11 +46,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1801BABA2E35FFC500A42DAA /* FirebaseCrashlytics in Frameworks */,
 				1801BBA82E362D6000A42DAA /* Lottie in Frameworks */,
 				1801BAC22E36016B00A42DAA /* Reachability in Frameworks */,
 				1801BAC52E3601E200A42DAA /* GoogleMobileAds in Frameworks */,
-				1801BABC2E35FFC500A42DAA /* FirebaseRemoteConfig in Frameworks */,
+				181A548D2E3B753A00E938F3 /* FirebaseRemoteConfig in Frameworks */,
+				181A548B2E3B753A00E938F3 /* FirebaseCrashlytics in Frameworks */,
 				1801BABF2E3600FB00A42DAA /* RevenueCat in Frameworks */,
 				1801BAC82E36022200A42DAA /* SwiftyAds in Frameworks */,
 			);
@@ -95,13 +95,13 @@
 			);
 			name = VNVideoSaver;
 			packageProductDependencies = (
-				1801BAB92E35FFC500A42DAA /* FirebaseCrashlytics */,
-				1801BABB2E35FFC500A42DAA /* FirebaseRemoteConfig */,
 				1801BABE2E3600FB00A42DAA /* RevenueCat */,
 				1801BAC12E36016B00A42DAA /* Reachability */,
 				1801BAC42E3601E200A42DAA /* GoogleMobileAds */,
 				1801BAC72E36022200A42DAA /* SwiftyAds */,
 				1801BBA72E362D6000A42DAA /* Lottie */,
+				181A548A2E3B753A00E938F3 /* FirebaseCrashlytics */,
+				181A548C2E3B753A00E938F3 /* FirebaseRemoteConfig */,
 			);
 			productName = VNVideoSaver;
 			productReference = 18BAF3322E34C05000DA0E8C /* VNVideoSaver.app */;
@@ -132,12 +132,12 @@
 			mainGroup = 18BAF3292E34C05000DA0E8C;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				1801BAB82E35FFC500A42DAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1801BABD2E3600FB00A42DAA /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 				1801BAC02E36016B00A42DAA /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 				1801BAC32E3601E200A42DAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				1801BAC62E36022200A42DAA /* XCRemoteSwiftPackageReference "swifty-ads" */,
 				1801BBA62E362D6000A42DAA /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				181A54892E3B753A00E938F3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 18BAF3332E34C05000DA0E8C /* Products */;
@@ -300,18 +300,22 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VNVideoSaver/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs access to your photo library to save videos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to get videos.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ios.VNVideoSaver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.video.saver.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -334,18 +338,22 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VNVideoSaver/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs access to your photo library to save videos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to get videos.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ios.VNVideoSaver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.video.saver.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -381,14 +389,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1801BAB82E35FFC500A42DAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = exactVersion;
-				version = 11.15.0;
-			};
-		};
 		1801BABD2E3600FB00A42DAA /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
@@ -429,19 +429,17 @@
 				minimumVersion = 4.5.2;
 			};
 		};
+		181A54892E3B753A00E938F3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1801BAB92E35FFC500A42DAA /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1801BAB82E35FFC500A42DAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
-		1801BABB2E35FFC500A42DAA /* FirebaseRemoteConfig */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1801BAB82E35FFC500A42DAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseRemoteConfig;
-		};
 		1801BABE2E3600FB00A42DAA /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1801BABD2E3600FB00A42DAA /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
@@ -466,6 +464,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1801BBA62E362D6000A42DAA /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		181A548A2E3B753A00E938F3 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 181A54892E3B753A00E938F3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		181A548C2E3B753A00E938F3 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 181A54892E3B753A00E938F3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
