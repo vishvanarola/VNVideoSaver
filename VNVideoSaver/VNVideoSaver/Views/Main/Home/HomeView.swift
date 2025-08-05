@@ -15,6 +15,10 @@ enum HomeDestination: Hashable {
     case premium
 }
 
+enum ExpandTool {
+    case video, tool, none
+}
+
 struct VideosArrayData: Hashable {
     var title: String
     var videoUrl: String
@@ -36,6 +40,7 @@ struct HomeView: View {
     @State private var toastText: String = "Copied"
     @State private var isUserAtTop: Bool = true
     @State private var randomVideos = [RandomVideoItem]()
+    @State private var expandTool: ExpandTool = .tool
     @Binding var isTabBarHidden: Bool
     @Binding var isHiddenBanner: Bool
     @Namespace private var topID
@@ -47,7 +52,11 @@ struct HomeView: View {
                     headerView
                     textFieldView
                     findButton
-                    if !randomVideos.isEmpty {
+                    headingView("Videos") {
+                        expandTool = expandTool == .video ? .none : .video
+                    }
+                    .padding(.top)
+                    if !randomVideos.isEmpty && expandTool == .video {
                         videoListView
                         Spacer()
                     }
@@ -179,8 +188,9 @@ struct HomeView: View {
     var findButton: some View {
         Button {
             if self.isValidURLRegex(enterTextInput) {
-                if PremiumManager.shared.isPremium {
+//                if PremiumManager.shared.isPremium {
                     if let random = videosArray.randomElement() {
+                        expandTool = .video
                         isFindTapped = true
                         let newItem = RandomVideoItem(data: random)
                         randomVideosGlob.insert(newItem, at: 0)
@@ -189,11 +199,11 @@ struct HomeView: View {
                             randomVideos.removeLast()
                         }
                     }
-                } else {
-                    isHideTabBackPremium = false
-                    isTabBarHidden = true
-                    navigationPath.append(HomeDestination.premium)
-                }
+//                } else {
+//                    isHideTabBackPremium = false
+//                    isTabBarHidden = true
+//                    navigationPath.append(HomeDestination.premium)
+//                }
             } else {
                 toastText = "Plase enter a valid URL"
                 showToasts()
@@ -219,54 +229,59 @@ struct HomeView: View {
     }
     
     var videoListView: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    Color.clear
-                        .frame(height: 1)
-                        .background(
-                            GeometryReader { geo -> Color in
-                                DispatchQueue.main.async {
-                                    isUserAtTop = geo.frame(in: .named("scroll")).minY >= -10
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        Color.clear
+                            .frame(height: 1)
+                            .background(
+                                GeometryReader { geo -> Color in
+                                    DispatchQueue.main.async {
+                                        isUserAtTop = geo.frame(in: .named("scroll")).minY >= -10
+                                    }
+                                    return Color.clear
                                 }
-                                return Color.clear
-                            }
-                        )
-                        .id("top")
-                    
-                    ForEach(randomVideos) { item in
-                        VideoThumbnailView(videoData: item.data)
-                            .padding(.horizontal)
+                            )
+                            .id("top")
+                        
+                        ForEach(randomVideos) { item in
+                            VideoThumbnailView(videoData: item.data)
+                                .padding(.horizontal)
+                        }
                     }
+//                    .padding(.top)
+                    .padding(.bottom, 5)
                 }
-                .padding(.top)
-                .padding(.bottom, 5)
-            }
-            .coordinateSpace(name: "scroll")
-            .onChange(of: randomVideos) { _, _ in
-                if !isUserAtTop {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            proxy.scrollTo("top", anchor: .top)
+                .coordinateSpace(name: "scroll")
+                .onChange(of: randomVideos) { _, _ in
+                    if !isUserAtTop {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                proxy.scrollTo("top", anchor: .top)
+                            }
                         }
                     }
                 }
             }
-        }
     }
     
     var tools: some View {
         VStack(spacing: 16) {
-            HStack(spacing: 16) {
-                tool(image: "ic_compress_video", destination: .compress)
-                tool(image: "ic_reverse_video", destination: .reverse)
+            headingView("More tools") {
+                expandTool = expandTool == .tool ? .none : .tool
             }
-            HStack(spacing: 16) {
-                tool(image: "ic_slowmotion_video", destination: .slowmotion)
-                tool(image: "ic_get_hashtag", destination: .hashtag)
+            if expandTool == .tool {
+                HStack(spacing: 16) {
+                    tool(image: "ic_compress_video", destination: .compress)
+                    tool(image: "ic_reverse_video", destination: .reverse)
+                }
+                HStack(spacing: 16) {
+                    tool(image: "ic_slowmotion_video", destination: .slowmotion)
+                    tool(image: "ic_get_hashtag", destination: .hashtag)
+                }
             }
         }
-        .padding(.top, 20)
+        .padding(.top, 10)
     }
     
     func tool(image: String, destination: HomeDestination) -> some View {
@@ -277,6 +292,28 @@ struct HomeView: View {
             Image(image)
                 .resizable()
                 .frame(width: (UIScreen.main.bounds.width - 56) / 2, height: (UIScreen.main.bounds.width - 56) / 2.5, alignment: .leading)
+        }
+    }
+    
+    func headingView(_ text: String, buttonAction: @escaping () -> Void) -> some View {
+        Button {
+            buttonAction()
+        } label: {
+            HStack {
+                Text(text)
+                    .font(FontConstants.MontserratFonts.medium(size: 17))
+                    .foregroundStyle(.white)
+                Spacer()
+                Image(systemName: "chevron.down")
+                    .rotationEffect(.degrees(
+                        (text == "Videos" && expandTool == .video) ||
+                        (text == "More tools" && expandTool == .tool)
+                        ? 180 : 0
+                    ))
+                    .animation(.easeInOut(duration: 0.2), value: expandTool)
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 20)
         }
     }
     
