@@ -87,9 +87,7 @@ struct MyCollectionsView: View {
             if collages.isEmpty {
                 VStack {
                     Spacer()
-                    Text("No Collages Found")
-                        .font(FontConstants.MontserratFonts.medium(size: 18))
-                        .foregroundColor(.gray)
+                    emptyStateView
                     Spacer()
                 }
             } else {

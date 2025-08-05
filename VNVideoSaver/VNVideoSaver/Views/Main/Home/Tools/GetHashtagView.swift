@@ -79,6 +79,7 @@ struct GetHashtagView: View {
             headerTitle: "Hashtag",
             leftButtonAction: {
                 isTabBarHidden = false
+                AdManager.shared.showInterstitialAd()
                 navigationPath.removeLast()
             }, rightButtonAction: nil
         )
@@ -115,6 +116,7 @@ struct GetHashtagView: View {
                     Button {
                         if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
                             PremiumManager.shared.markUsed()
+                            AdManager.shared.showInterstitialAd()
                             UIPasteboard.general.string = hashtag.description
                             showToast = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {

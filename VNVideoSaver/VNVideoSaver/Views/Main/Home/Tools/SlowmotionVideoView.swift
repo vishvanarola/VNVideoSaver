@@ -81,6 +81,7 @@ struct SlowmotionVideoView: View {
             headerTitle: "Slowmotion",
             leftButtonAction: {
                 isTabBarHidden = false
+                AdManager.shared.showInterstitialAd()
                 navigationPath.removeLast()
             }, rightButtonAction: {
                 showVideoPicker = true

@@ -53,6 +53,7 @@ struct HomeView: View {
                     textFieldView
                     findButton
                     headingView("Videos") {
+                        AdManager.shared.showInterstitialAd()
                         expandTool = expandTool == .video ? .none : .video
                     }
                     .padding(.top)
@@ -77,6 +78,9 @@ struct HomeView: View {
                             .padding(.bottom, 20)
                     }
                 }
+            }
+            .onAppear {
+                randomVideos = randomVideosGlob
             }
             .navigationDestination(for: HomeDestination.self) { destination in
                 switch destination {
@@ -119,19 +123,21 @@ struct HomeView: View {
                             .font(FontConstants.SyneFonts.semiBold(size: 23))
                     )
                 Spacer()
-                Button {
-                    if ReachabilityManager.shared.isNetworkAvailable {
-                        isHideTabBackPremium = false
-                        isTabBarHidden = true
-                        navigationPath.append(HomeDestination.premium)
-                    } else {
-                        showNoInternetAlert = true
+                if !PremiumManager.shared.isPremium {
+                    Button {
+                        if ReachabilityManager.shared.isNetworkAvailable {
+                            isHideTabBackPremium = false
+                            isTabBarHidden = true
+                            navigationPath.append(HomeDestination.premium)
+                        } else {
+                            showNoInternetAlert = true
+                        }
+                    } label: {
+                        Image("ic_pro")
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 70, height: 30)
                     }
-                } label: {
-                    Image("ic_pro")
-                        .resizable()
-                        .foregroundColor(.white)
-                        .frame(width: 70, height: 30)
                 }
             }
             .padding(.bottom, 20)
@@ -152,6 +158,7 @@ struct HomeView: View {
                 .cornerRadius(20)
                 .shadow(radius: 3)
                 Button {
+                    AdManager.shared.showInterstitialAd()
                     if !enterTextInput.isEmpty {
                         toastText = "Copied"
                         UIPasteboard.general.string = enterTextInput
@@ -188,7 +195,7 @@ struct HomeView: View {
     var findButton: some View {
         Button {
             if self.isValidURLRegex(enterTextInput) {
-//                if PremiumManager.shared.isPremium {
+                if PremiumManager.shared.isPremium {
                     if let random = videosArray.randomElement() {
                         expandTool = .video
                         isFindTapped = true
@@ -199,11 +206,11 @@ struct HomeView: View {
                             randomVideos.removeLast()
                         }
                     }
-//                } else {
-//                    isHideTabBackPremium = false
-//                    isTabBarHidden = true
-//                    navigationPath.append(HomeDestination.premium)
-//                }
+                } else {
+                    isHideTabBackPremium = false
+                    isTabBarHidden = true
+                    navigationPath.append(HomeDestination.premium)
+                }
             } else {
                 toastText = "Plase enter a valid URL"
                 showToasts()
@@ -229,45 +236,45 @@ struct HomeView: View {
     }
     
     var videoListView: some View {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        Color.clear
-                            .frame(height: 1)
-                            .background(
-                                GeometryReader { geo -> Color in
-                                    DispatchQueue.main.async {
-                                        isUserAtTop = geo.frame(in: .named("scroll")).minY >= -10
-                                    }
-                                    return Color.clear
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    Color.clear
+                        .frame(height: 1)
+                        .background(
+                            GeometryReader { geo -> Color in
+                                DispatchQueue.main.async {
+                                    isUserAtTop = geo.frame(in: .named("scroll")).minY >= -10
                                 }
-                            )
-                            .id("top")
-                        
-                        ForEach(randomVideos) { item in
-                            VideoThumbnailView(videoData: item.data)
-                                .padding(.horizontal)
-                        }
-                    }
-//                    .padding(.top)
-                    .padding(.bottom, 5)
-                }
-                .coordinateSpace(name: "scroll")
-                .onChange(of: randomVideos) { _, _ in
-                    if !isUserAtTop {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                proxy.scrollTo("top", anchor: .top)
+                                return Color.clear
                             }
+                        )
+                        .id("top")
+                    
+                    ForEach(randomVideos) { item in
+                        VideoThumbnailView(videoData: item.data)
+                            .padding(.horizontal)
+                    }
+                }
+                .padding(.bottom, 5)
+            }
+            .coordinateSpace(name: "scroll")
+            .onChange(of: randomVideos) { _, _ in
+                if !isUserAtTop {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo("top", anchor: .top)
                         }
                     }
                 }
             }
+        }
     }
     
     var tools: some View {
         VStack(spacing: 16) {
             headingView("More tools") {
+                AdManager.shared.showInterstitialAd()
                 expandTool = expandTool == .tool ? .none : .tool
             }
             if expandTool == .tool {
@@ -287,6 +294,7 @@ struct HomeView: View {
     func tool(image: String, destination: HomeDestination) -> some View {
         Button {
             isTabBarHidden = true
+            AdManager.shared.showInterstitialAd()
             navigationPath.append(destination)
         } label: {
             Image(image)

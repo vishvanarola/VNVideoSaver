@@ -70,6 +70,7 @@ struct CompressVideoView: View {
             rightButtonImageName: isVideoPicked ? "ic_share" : "ic_white_plus",
             headerTitle: "Compress",
             leftButtonAction: {
+                AdManager.shared.showInterstitialAd()
                 isTabBarHidden = false
                 navigationPath.removeLast()
             }, rightButtonAction: {

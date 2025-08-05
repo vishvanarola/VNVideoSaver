@@ -71,6 +71,7 @@ struct ReverseVideoView: View {
             headerTitle: "Reverse",
             leftButtonAction: {
                 isTabBarHidden = false
+                AdManager.shared.showInterstitialAd()
                 navigationPath.removeLast()
             }, rightButtonAction: {
                 if isVideoPicked, let convertedURL = convertedVideoURL {

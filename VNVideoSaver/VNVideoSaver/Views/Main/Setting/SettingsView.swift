@@ -31,8 +31,13 @@ struct SettingsView: View {
         NavigationStack(path: $navigationPath) {
             VStack {
                 headerView
-                premiumView
+                if !PremiumManager.shared.isPremium {
+                    premiumView
+                }
                 tools
+                if !PremiumManager.shared.isPremium {
+                    nativeAdView
+                }
                 Spacer()
             }
             .ignoresSafeArea()
@@ -156,6 +161,14 @@ struct SettingsView: View {
             openURL(url)
         } else {
             showNoInternetAlert = true
+        }
+    }
+    
+    var nativeAdView: some View {
+        Group {
+            GADNativeViewControllerWrapper()
+                .padding(.horizontal, 20)
+                .padding(.top)
         }
     }
 }

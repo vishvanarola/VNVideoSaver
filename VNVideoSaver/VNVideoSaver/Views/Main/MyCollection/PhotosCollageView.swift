@@ -71,6 +71,7 @@ struct PhotosCollageView: View {
                 }
             }
         )
+        .padding(.horizontal, 20)
     }
     
     var collagePhohotView: some View {
