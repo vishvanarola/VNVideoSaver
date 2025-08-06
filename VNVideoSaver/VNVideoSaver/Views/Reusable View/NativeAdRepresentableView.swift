@@ -46,6 +46,7 @@ class GADNativeViewController: UIViewController {
             let adView = nibObjects.first as? NativeAdView
         else {
             assert(false, "Could not load nib file for adView")
+            return
         }
         setAdView(adView)
         refreshAd()

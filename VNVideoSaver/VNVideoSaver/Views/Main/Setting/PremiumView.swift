@@ -36,10 +36,11 @@ struct PremiumView: View {
                         .padding(.top, 10)
                     }
                     .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                            withAnimation(.easeOut(duration: 2)) {
-                                proxy.scrollTo("BOTTOM", anchor: .bottom)
-                            }
+                        isHiddenBanner = true
+                        if premiumManager.products.isEmpty {
+                            premiumManager.fetchProducts()
+                        } else {
+                            selectedPlanIndex = 0
                         }
                     }
                 }
@@ -110,23 +111,25 @@ struct PremiumView: View {
                 }
             }
             Spacer()
-            Button {
-                AdManager.shared.showInterstitialAd()
-                isTabBarHidden = isHideTabBackPremium
-                navigationPath.removeLast()
-            } label: {
-                Image("ic_close")
-                    .resizable()
-                    .scaledToFit()
+            if premiumCloseShow {
+                Button {
+                    AdManager.shared.showInterstitialAd()
+                    isTabBarHidden = isHideTabBackPremium
+                    navigationPath.removeLast()
+                } label: {
+                    Image("ic_close")
+                        .resizable()
+                        .scaledToFit()
+                }
+                .frame(width: 30, height: 30)
             }
-            .frame(width: 30, height: 30)
         }
         .padding(.top)
     }
     
     var headerView: some View {
         VStack(spacing: 10) {
-            Text("Unlock Premium")
+            Text(premiumHeader)
                 .font(FontConstants.SyneFonts.semiBold(size: 35))
                 .overlay(
                     LinearGradient(colors: [redThemeColor, pinkGradientColor],
@@ -134,7 +137,7 @@ struct PremiumView: View {
                                    endPoint: .bottomTrailing)
                 )
                 .mask(
-                    Text("Unlock Premium")
+                    Text(premiumHeader)
                         .font(FontConstants.SyneFonts.semiBold(size: 35))
                 )
             
@@ -165,7 +168,7 @@ struct PremiumView: View {
     
     var subscriptionPlansView: some View {
         VStack(spacing: 10) {
-            ForEach(Array(premiumManager.products.enumerated()), id: \.element.productIdentifier) { index, product in
+            ForEach(Array(premiumManager.products.sortedByPlanType().enumerated()), id: \.element.productIdentifier) { index, product in
                 Button {
                     AdManager.shared.showInterstitialAd()
                     selectedPlanIndex = index
@@ -290,6 +293,23 @@ struct SubscriptionPlanCell: View {
                 }
             }
         )
+    }
+}
+
+extension Array where Element == StoreProduct {
+    func sortedByPlanType() -> [StoreProduct] {
+        return self.sorted { first, second in
+            let order: [String: Int] = [
+                "weekly": 0,
+                "month": 1,
+                "year": 2
+            ]
+            
+            let firstKey = order.first { first.productIdentifier.lowercased().contains($0.key) }?.value ?? Int.max
+            let secondKey = order.first { second.productIdentifier.lowercased().contains($0.key) }?.value ?? Int.max
+            
+            return firstKey < secondKey
+        }
     }
 }
 

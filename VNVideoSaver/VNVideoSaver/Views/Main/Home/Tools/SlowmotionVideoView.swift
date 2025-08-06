@@ -277,19 +277,6 @@ struct SlowmotionVideoView: View {
                     toDuration: CMTimeMultiplyByFloat64(duration, multiplier: scaleFactor)
                 )
                 
-                // Also handle audio
-                //                if let audioTrack = asset.tracks(withMediaType: .audio).first {
-                //                    let audioCompositionTrack = composition.addMutableTrack(
-                //                        withMediaType: .audio,
-                //                        preferredTrackID: kCMPersistentTrackID_Invalid
-                //                    )
-                //                    try audioCompositionTrack?.insertTimeRange(timeRange, of: audioTrack, at: .zero)
-                //                    audioCompositionTrack?.scaleTimeRange(
-                //                        timeRange,
-                //                        toDuration: CMTimeMultiplyByFloat64(duration, multiplier: scaleFactor)
-                //                    )
-                //                }
-                
                 let audioTracks = try await asset.loadTracks(withMediaType: .audio)
                 guard let audioTrack = audioTracks.first else {
                     print("No audio track found")

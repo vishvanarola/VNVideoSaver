@@ -80,7 +80,14 @@ struct HomeView: View {
                 }
             }
             .onAppear {
-                randomVideos = randomVideosGlob
+                if appComesFirst && !PremiumManager.shared.isPremium {
+                    appComesFirst = false
+                    isHideTabBackPremium = false
+                    isTabBarHidden = true
+                    navigationPath.append(HomeDestination.premium)
+                } else {
+                    randomVideos = randomVideosGlob
+                }
             }
             .navigationDestination(for: HomeDestination.self) { destination in
                 switch destination {

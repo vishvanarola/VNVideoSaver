@@ -154,7 +154,119 @@ struct ReverseVideoView: View {
     }
     
     func reverseVideo(originalURL: URL) {
-        PremiumManager.shared.markUsed()
+        let asset = AVAsset(url: originalURL)
+        
+        Task {
+            do {
+                let videoTracks = try await asset.loadTracks(withMediaType: .video)
+                guard let videoTrack = videoTracks.first else {
+                    self.toastText = "Failed to load video track"
+                    self.showToast = true
+                    return
+                }
+                
+                let videoSize = try await videoTrack.load(.naturalSize)
+                let frameRate = try await videoTrack.load(.nominalFrameRate)
+                
+                let readerSettings: [String: Any] = [
+                    kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB
+                ]
+                
+                let reader = try AVAssetReader(asset: asset)
+                let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerSettings)
+                reader.add(readerOutput)
+                
+                reader.startReading()
+                
+                var samples: [CMSampleBuffer] = []
+                
+                while let sample = readerOutput.copyNextSampleBuffer() {
+                    samples.append(sample)
+                }
+                
+                // Reverse the frames
+                samples.reverse()
+                
+                // Prepare writer
+                let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("reversedVideo.mp4")
+                if FileManager.default.fileExists(atPath: outputURL.path) {
+                    try FileManager.default.removeItem(at: outputURL)
+                }
+                
+                let writer = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
+                
+                let videoSettings: [String: Any] = [
+                    AVVideoCodecKey: AVVideoCodecType.h264,
+                    AVVideoWidthKey: videoSize.width,
+                    AVVideoHeightKey: videoSize.height
+                ]
+                
+                let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+                writerInput.expectsMediaDataInRealTime = false
+                
+                let adapter = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
+                
+                writer.add(writerInput)
+                writer.startWriting()
+                writer.startSession(atSourceTime: .zero)
+                
+                var frameCount: Int64 = 0
+                let frameDuration = CMTime(value: 1, timescale: Int32(frameRate))
+                
+                for sample in samples {
+                    if let imageBuffer = CMSampleBufferGetImageBuffer(sample) {
+                        while !writerInput.isReadyForMoreMediaData {
+                            try await Task.sleep(nanoseconds: 10_000_000)
+                        }
+                        let presentationTime = CMTimeMultiply(frameDuration, multiplier: Int32(frameCount))
+                        adapter.append(imageBuffer, withPresentationTime: presentationTime)
+                        frameCount += 1
+                    }
+                }
+                
+                writerInput.markAsFinished()
+                writer.finishWriting {
+                    DispatchQueue.main.async {
+                        if writer.status == .completed {
+                            self.convertedVideoURL = outputURL
+                            self.toastText = "Video reversed successfully!"
+                            self.showToast = true
+                            let newPlayer = AVPlayer(url: outputURL)
+                            self.player = newPlayer
+                            self.isPlaying = false
+                            if let player = self.player {
+                                self.configurePlayer(player)
+                            }
+                            self.saveVideoToPhotoLibrary(url: outputURL)
+                            PremiumManager.shared.markUsed()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                self.showToast = false
+                            }
+                        } else {
+                            print("Error writing video: \(writer.error?.localizedDescription ?? "Unknown")")
+                        }
+                    }
+                }
+                
+            } catch {
+                print("Error reversing video: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func saveVideoToPhotoLibrary(url: URL) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+        }) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    print("Saved to Photos")
+                } else {
+                    print("Error saving video: \(error?.localizedDescription ?? "Unknown")")
+                }
+            }
+        }
     }
     
     func shareVideo(url: URL) {

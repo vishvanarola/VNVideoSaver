@@ -179,10 +179,10 @@ struct CompressVideoView: View {
                             print("Compression succeeded.")
                             self.convertedVideoURL = outputURL
                             self.isPlaying = false
-                            
                             if let player = self.player {
                                 self.configurePlayer(player)
                             }
+                            self.saveVideoToPhotoLibrary(url: outputURL)
                             PremiumManager.shared.markUsed()
                             toastText = "Video compressed successfully"
                             self.showToast = true
@@ -196,6 +196,20 @@ struct CompressVideoView: View {
                         }
                         continuation.resume()
                     }
+                }
+            }
+        }
+    }
+    
+    func saveVideoToPhotoLibrary(url: URL) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+        }) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    print("Saved to Photos")
+                } else {
+                    print("Error saving video: \(error?.localizedDescription ?? "Unknown")")
                 }
             }
         }
