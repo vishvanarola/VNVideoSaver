@@ -92,7 +92,7 @@ struct PremiumView: View {
     
     var restoreView: some View {
         HStack {
-            if restoreShow {
+            if let restoreShow = remoteConfigModel?.restoreShow, restoreShow == true {
                 Button {
                     premiumManager.restorePurchases { success, error in
                         DispatchQueue.main.async {
@@ -111,7 +111,7 @@ struct PremiumView: View {
                 }
             }
             Spacer()
-            if premiumCloseShow {
+            if let premiumCloseShow = remoteConfigModel?.premiumCloseShow, premiumCloseShow == true {
                 Button {
                     AdManager.shared.showInterstitialAd()
                     isTabBarHidden = isHideTabBackPremium
@@ -129,7 +129,7 @@ struct PremiumView: View {
     
     var headerView: some View {
         VStack(spacing: 10) {
-            Text(premiumHeader)
+            Text(remoteConfigModel?.premiumHeader ?? "Unlock Premium")
                 .font(FontConstants.SyneFonts.semiBold(size: 35))
                 .overlay(
                     LinearGradient(colors: [redThemeColor, pinkGradientColor],
@@ -137,7 +137,7 @@ struct PremiumView: View {
                                    endPoint: .bottomTrailing)
                 )
                 .mask(
-                    Text(premiumHeader)
+                    Text(remoteConfigModel?.premiumHeader ?? "Unlock Premium")
                         .font(FontConstants.SyneFonts.semiBold(size: 35))
                 )
             

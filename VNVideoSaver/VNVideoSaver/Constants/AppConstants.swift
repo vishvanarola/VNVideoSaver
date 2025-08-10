@@ -8,16 +8,13 @@
 import SwiftUI
 import Photos
 
-let homeAppName = "MegaGrab"
-let splashAppName = "MegaGrab"
+let homeAppName = "Video Saver"
+let splashAppName = "Video Saver"
 let remoteConfigAdFetchKey = "VideoSaver"
 var interstitialIntergap: Int = 3
 var isHideTabBackPremium: Bool = true
-var remoteConfigAdShowCount: Int = 3
-var restoreShow: Bool = false
-var premiumCloseShow: Bool = true
-var premiumHeader: String = "Unlock Premium"
 var appComesFirst = true
+var remoteConfigModel: RemoteAdsModel?
 
 let redThemeColor = Color(red: 229/255, green: 32/255, blue: 32/255) //#E52020
 let pinkThemeColor = Color(red: 1.0, green: 101/255, blue: 101/255) //#FF6565

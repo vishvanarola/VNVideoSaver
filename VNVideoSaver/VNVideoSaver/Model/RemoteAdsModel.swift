@@ -18,6 +18,7 @@ struct RemoteAdsModel : Codable {
     var restoreShow : Bool? = nil
     var premiumCloseShow : Bool? = nil
     var premiumHeader : String? = nil
+    var isShowNativeSettings : Bool? = nil
     
     init() {
         

@@ -26,6 +26,7 @@ struct SettingsView: View {
     @Binding var selectedTab: CustomTab
     @Binding var isTabBarHidden: Bool
     @Binding var isHiddenBanner: Bool
+    @ObservedObject var adManager = AdManager.shared
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -35,7 +36,7 @@ struct SettingsView: View {
                     premiumView
                 }
                 tools
-                if !PremiumManager.shared.isPremium {
+                if let isShowNativeSettings = remoteConfigModel?.isShowNativeSettings, isShowNativeSettings == true && !PremiumManager.shared.isPremium {
                     nativeAdView
                 }
                 Spacer()

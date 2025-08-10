@@ -36,7 +36,7 @@ class GADNativeViewController: UIViewController {
     var nativeAdView: NativeAdView!
     
     /// The ad unit ID.
-    let adUnitID = "ca-app-pub-3940256099942544/3986624511"
+    let adUnitID = remoteConfigModel?.native ?? "ca-app-pub-3940256099942544/3986624511"
     
     override func viewDidLoad() {
         super.viewDidLoad()

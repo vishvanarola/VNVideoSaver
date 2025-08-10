@@ -105,7 +105,7 @@ class AdManager: NSObject, ObservableObject {
     
     func showInterstitialAd() {
         if !PremiumManager.shared.isPremium {
-            if interstitialIntergap == remoteConfigAdShowCount {
+            if interstitialIntergap == remoteConfigModel?.intergap ?? 3 {
                 if let interstitialAd = interstitialAd {
                     interstitialAd.present(from: UIApplication.shared.rootVC)
                     interstitialIntergap -= 1
@@ -116,7 +116,7 @@ class AdManager: NSObject, ObservableObject {
                     loadInterstitialAd()
                 }
             } else {
-                interstitialIntergap = interstitialIntergap <= 0 ? remoteConfigAdShowCount : interstitialIntergap-1
+                interstitialIntergap = interstitialIntergap <= 0 ? remoteConfigModel?.intergap ?? 3 : interstitialIntergap-1
             }
         }
     }

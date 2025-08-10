@@ -55,6 +55,10 @@ struct SlowmotionVideoView: View {
                 }
             }
         }
+        .onDisappear {
+            self.player?.pause()
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
+        }
         .animation(.easeInOut, value: showToast)
         .sheet(isPresented: $showVideoPicker) {
             VideoPicker { url in
@@ -134,10 +138,15 @@ struct SlowmotionVideoView: View {
                     }
                 }
             } else {
-                Rectangle()
-                    .fill(backgroundGrayColor)
-                    .cornerRadius(10)
-                    .padding(.vertical, 20)
+                VStack {
+                    Spacer()
+                    Text("Please select the video!!")
+                        .font(FontConstants.MontserratFonts.medium(size: 17))
+                        .padding()
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                    Spacer()
+                }
             }
         }
     }
@@ -153,14 +162,9 @@ struct SlowmotionVideoView: View {
     
     func slowButton(text: String, type: SlowmotionType) -> some View {
         Button {
-            if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
-                PremiumManager.shared.markUsed()
-                slowmotionType = type
-                if let url = self.pickedVideoURL {
-                    self.slowmotionVideo(originalURL: url, type: type)
-                }
-            } else {
-                navigationPath.append(HomeDestination.premium)
+            slowmotionType = type
+            if let url = self.pickedVideoURL {
+                self.slowmotionVideo(originalURL: url, type: type)
             }
         } label: {
             Text(text)
@@ -187,8 +191,13 @@ struct SlowmotionVideoView: View {
         ThemeButtonView(buttonTitle: "Save Video") {
             if let url = pickedVideoURL {
                 if ReachabilityManager.shared.isNetworkAvailable {
-                    AdManager.shared.showInterstitialAd()
-                    self.saveSlowMotionVideo(originalURL: url, type: slowmotionType)
+                    if PremiumManager.shared.isPremium || !PremiumManager.shared.hasUsed() {
+                        PremiumManager.shared.markUsed()
+                        AdManager.shared.showInterstitialAd()
+                        self.saveSlowMotionVideo(originalURL: url, type: slowmotionType)
+                    } else {
+                        navigationPath.append(HomeDestination.premium)
+                    }
                 } else {
                     showNoInternetAlert = true
                 }

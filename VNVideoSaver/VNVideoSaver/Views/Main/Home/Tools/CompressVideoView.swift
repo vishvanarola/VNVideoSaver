@@ -121,10 +121,15 @@ struct CompressVideoView: View {
                     }
                 }
             } else {
-                Rectangle()
-                    .fill(backgroundGrayColor)
-                    .cornerRadius(10)
-                    .padding(.vertical, 20)
+                VStack {
+                    Spacer()
+                    Text("Please select the video!!")
+                        .font(FontConstants.MontserratFonts.medium(size: 17))
+                        .padding()
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                    Spacer()
+                }
             }
         }
     }

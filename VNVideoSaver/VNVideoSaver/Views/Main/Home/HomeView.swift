@@ -52,16 +52,18 @@ struct HomeView: View {
                     headerView
                     textFieldView
                     findButton
-                    headingView("Videos") {
-                        AdManager.shared.showInterstitialAd()
-                        expandTool = expandTool == .video ? .none : .video
+                    ScrollView {
+                        headingView("Videos") {
+                            AdManager.shared.showInterstitialAd()
+                            expandTool = expandTool == .video ? .none : .video
+                        }
+                        .padding(.top)
+                        if !randomVideos.isEmpty && expandTool == .video {
+                            videoListView
+                            Spacer()
+                        }
+                        tools
                     }
-                    .padding(.top)
-                    if !randomVideos.isEmpty && expandTool == .video {
-                        videoListView
-                        Spacer()
-                    }
-                    tools
                     Spacer()
                 }
                 .ignoresSafeArea()

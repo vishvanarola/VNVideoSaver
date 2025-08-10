@@ -22,11 +22,9 @@ struct VNVideoSaverApp: App {
         PremiumManager.shared.configureRevenueCat()
         
         AdServices().fetchNewRemoteAdsData { response in
+            remoteConfigModel = response
             AdManager.shared.configureAds(response.canShowUMP ?? false)
             interstitialIntergap = response.intergap ?? 3
-            remoteConfigAdShowCount = response.intergap ?? 3
-            restoreShow = response.restoreShow ?? false
-            premiumCloseShow = response.premiumCloseShow ?? false
             if let appOpenAdUnitID = response.appOpen {
                 AdManager.shared.appOpenAdUnitID = appOpenAdUnitID
                 if !PremiumManager.shared.isPremium {
