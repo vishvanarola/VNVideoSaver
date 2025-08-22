@@ -43,7 +43,6 @@ struct HomeView: View {
     @State private var expandTool: ExpandTool = .tool
     @Binding var isTabBarHidden: Bool
     @Binding var isHiddenBanner: Bool
-    @Namespace private var topID
     
     var body: some View {
         NavigationStack(path: $navigationPath) {

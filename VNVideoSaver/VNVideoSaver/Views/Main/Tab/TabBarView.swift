@@ -22,7 +22,7 @@ struct TabBarView: View {
             Group {
                 switch selectedTab {
                 case .home:
-                    HomeView(isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
+                    NewHomeView(isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
                 case .myCollection:
                     MyCollectionsView(selectedTab: $selectedTab, isTabBarHidden: $isTabBarHidden, isHiddenBanner: $isHiddenBanner)
                 case .settings:
