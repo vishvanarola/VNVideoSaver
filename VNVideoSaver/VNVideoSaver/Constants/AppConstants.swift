@@ -8,8 +8,8 @@
 import SwiftUI
 import Photos
 
-let homeAppName = "VidFetch"
-let splashAppName = "VidFetch"
+let homeAppName = "MegaGrab"
+let splashAppName = "MegaGrab"
 let remoteConfigAdFetchKey = "VideoSaver"
 var interstitialIntergap: Int = 3
 var isHideTabBackPremium: Bool = true
