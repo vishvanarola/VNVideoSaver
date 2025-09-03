@@ -295,13 +295,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VNVideoSaver/Preview Content\"";
 				DEVELOPMENT_TEAM = 9U8UQ88NJD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VNVideoSaver/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = MegaGrab;
+				INFOPLIST_KEY_CFBundleDisplayName = "TikSaver : Tik Video Saver";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access photos to edit videos: compress, reverse, slow motion.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access photos to edit videos: compress, reverse, slow motion.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
@@ -316,7 +316,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.video.saver.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -335,13 +335,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VNVideoSaver/Preview Content\"";
 				DEVELOPMENT_TEAM = 9U8UQ88NJD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VNVideoSaver/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = MegaGrab;
+				INFOPLIST_KEY_CFBundleDisplayName = "TikSaver : Tik Video Saver";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access photos to edit videos: compress, reverse, slow motion.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access photos to edit videos: compress, reverse, slow motion.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
@@ -356,7 +356,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.video.saver.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

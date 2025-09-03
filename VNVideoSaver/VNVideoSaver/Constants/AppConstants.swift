@@ -8,8 +8,8 @@
 import SwiftUI
 import Photos
 
-let homeAppName = "MegaGrab"
-let splashAppName = "MegaGrab"
+let homeAppName = "TikSaver"
+let splashAppName = "TikSaver"
 let remoteConfigAdFetchKey = "VideoSaver"
 var interstitialIntergap: Int = 3
 var isHideTabBackPremium: Bool = true
